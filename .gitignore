@@ -1,22 +1,25 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# Dependencies and AdonisJS build
+node_modules
+build
+tmp
 
-# Test binary, built with `go test -c`
-*.test
+# Secrets
+.env
+.env.local
+.env.production.local
+.env.development.local
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# Frontend assets compiled code
+public/assets
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Build tools specific
+npm-debug.log
+yarn-error.log
 
-# Go workspace file
-go.work
-go.work.sum
+# Editors specific
+.fleet
+.idea
+.vscode
+
+# Platform specific
+.DS_Store
