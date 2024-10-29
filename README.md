@@ -1,6 +1,6 @@
 ## About
 
-I'm building a feature-rich music and podcast streaming app designed to provide a seamless listening experience. Whether you're a casual listener or an avid music enthusiast, Music Streamer offers a range of features to meet your needs. Users can easily register, set up their account, upload their favorite tracks, stream music and podcasts, connect with others, and much more.
+I'm building a feature-rich music and podcast streaming app designed to provide a seamless listening experience. Whether you're a casual listener or an avid music enthusiast. Users can easily register, set up their account, upload their favorite tracks, stream music and podcasts, connect with others, and much more.
 
 
 ## Roadmap(Backend)
