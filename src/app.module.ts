@@ -1,3 +1,4 @@
+import { StreamModule } from './Stream/stream.module';
 import { PrismaService } from './prisma.service';
 import {
   MiddlewareConsumer,
@@ -12,7 +13,7 @@ import { AuthGuardMiddleware } from './Auth/auth.middleware';
 import { AuthService } from './Auth/auth.service';
 
 @Module({
-  imports: [AuthModule],
+  imports: [StreamModule, AuthModule],
   controllers: [AppController, AccountsController],
   providers: [PrismaService, AppService, AuthService],
   exports: [PrismaService],
