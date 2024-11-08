@@ -12,3 +12,11 @@ export class StoreAccessTokenError extends Error {
   name: string;
   stack?: string;
 }
+
+export class InvalidTokenError extends Error {
+  constructor(message?: any) {
+    super(message);
+  }
+  name: string;
+  stack?: string;
+}

@@ -2,20 +2,28 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Param, Get, Res } from '@nestjs/common';
+import { SuccessResponse } from 'src/utils/response';
+import { StreamService } from './stream.service';
+import { Response } from 'express';
 
-@Controller("stream")
+@Controller('stream')
 export class StreamController {
-  @Post("/song")
-  song() {
-    // song stream implementation 
+  constructor(private readonly streamService: StreamService) {}
+  @Get('/song/:songID')
+  song(@Param('songID') params: string, @Res() res: Response) {
+    let songID: string = params['songID'];
+    return this.streamService.initStream(songID, res);
+    return SuccessResponse('Params ', params);
+    // song stream implementation
+    // console.log("params", params['songID'])
   }
-  @Post("/podcast")
+  @Get('/podcast')
   podcast() {
-    // podcast stream implementation 
+    // podcast stream implementation
   }
-  @Post("/radio")
+  @Get('/radio')
   radio() {
-    // radio stream implementation 
+    // radio stream implementation
   }
 }

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { CustomValidationExceptionFilter} from './filters/CustomValidationException.filter';
+import { CustomValidationExceptionFilter } from './filters/CustomValidationException.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,18 +12,20 @@ async function bootstrap() {
       transform: true, // Automatically transforms the payload to the expected DTO class
     }),
   );
-  app.useGlobalFilters(new CustomValidationExceptionFilter())
-app.setGlobalPrefix("/api")
-  await app.listen(6000);
+  app.useGlobalFilters(new CustomValidationExceptionFilter());
+  app.setGlobalPrefix('/api');
+  app.enableCors({
+    origin: '*', // Allow all origins (for specific origins, replace with an array of URLs)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow credentials (cookies)
+  });
   
-  
-  
-  
-  
+  await app.listen(2000);
+
   const server = app.getHttpServer();
   const router = server._events.request._router;
   const availableRoutes: [] = router.stack
-    .map(layer => {
+    .map((layer) => {
       if (layer.route) {
         return {
           route: {
@@ -33,7 +35,7 @@ app.setGlobalPrefix("/api")
         };
       }
     })
-    .filter(item => item !== undefined);
-  // console.log(availableRoutes);
+    .filter((item) => item !== undefined);
+  console.log(availableRoutes);
 }
 bootstrap();

@@ -14,15 +14,18 @@ datasource db {
 }
 
 model user {
-  user_id      Int           @id @default(autoincrement())
-  email        String        @unique
-  full_name    String
-  created_at   DateTime      @default(now())
-  updated_at   DateTime?
-  account_type account_type  @default(Regular)
-  profile      profile?
-  password     password?
-  access_token access_token?
+  user_id       String                    @id @default(cuid())
+  email         String                    @unique
+  full_name     String
+  account_type  account_type              @default(Regular)
+  profile       profile?
+  password      password?
+  access_token  access_token?
+  music         music_on_artist[]
+  futured_music music_on_futured_artist[]
+  album         album_on_artist[]
+  created_at    DateTime                  @default(now())
+  updated_at    DateTime?
 }
 
 enum account_type {
@@ -32,23 +35,117 @@ enum account_type {
 }
 
 model profile {
-  profile_id Int     @id @default(autoincrement())
+  profile_id String    @id @default(cuid())
   avatar_url String?
   bio        String
-  user       user    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
-  user_id    Int     @unique
+  user       user      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  user_id    String    @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime?
 }
 
 model password {
-  password_hash String @default("")
-  password_id   Int    @default(autoincrement())
-  user          user   @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
-  user_id       Int    @unique
+  password_id   String    @id @default(cuid())
+  password_hash String    @default("")
+  user          user      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  user_id       String    @unique
+  created_at    DateTime  @default(now())
+  updated_at    DateTime?
 }
 
 model access_token {
-  access_token_id Int     @id @default(autoincrement())
-  access_token           String?
-  user            user    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
-  user_id         Int     @unique
+  access_token_id String    @id @default(cuid())
+  access_token    String?
+  user            user      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  user_id         String    @unique
+  created_at      DateTime  @default(now())
+  updated_at      DateTime?
+}
+
+model music {
+  music_id         String                    @id @default(cuid())
+  title            String
+  album_id         String
+  music_stream_url music_stream_url?
+  artist           music_on_artist[]
+  futured_artist   music_on_futured_artist[]
+  music_metadata   music_metadata?
+  album            album                     @relation(fields: [album_id], references: [album_id])
+  created_at       DateTime                  @default(now())
+  updated_at       DateTime?
+}
+
+model music_stream_url {
+  music_stream_url_id String    @id @default(cuid())
+  music_stream_url    String?
+  music               music     @relation(fields: [music_id], references: [music_id], onDelete: Cascade, onUpdate: Cascade)
+  music_id            String    @unique
+  created_at          DateTime  @default(now())
+  updated_at          DateTime?
+}
+
+model music_metadata {
+  music_metadata_id String                 @id @default(cuid())
+  music_id          String                 @unique
+  music             music                  @relation(fields: [music_id], references: [music_id], onDelete: Cascade, onUpdate: Cascade)
+  genre             music_metadata_genre[]
+  year              DateTime
+  composer          String
+  track             Int
+  created_at        DateTime               @default(now())
+  updated_at        DateTime?
+  genreGenre_id     String
+}
+
+model music_metadata_genre {
+  music_metadata_genre String         @id @default(cuid())
+  music_metadata_id    String
+  music_metadata       music_metadata @relation(fields: [music_metadata_id], references: [music_metadata_id])
+  genre_id             Int
+  genre                genre          @relation(fields: [genre_id], references: [genre_id])
+}
+
+model genre {
+  genre_id             Int                    @id @default(autoincrement())
+  genre_name           String                 @unique
+  music_metadata_genre music_metadata_genre[]
+}
+
+model music_on_artist {
+  music_on_artist_id String    @id @default(cuid())
+  music_id           String
+  music              music     @relation(fields: [music_id], references: [music_id], onDelete: Cascade, onUpdate: Cascade)
+  artist_id          String
+  artist             user      @relation(fields: [artist_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime?
+}
+
+model music_on_futured_artist {
+  music_on_futured_artist_id String    @id @default(cuid())
+  music_id                   String
+  music                      music     @relation(fields: [music_id], references: [music_id], onDelete: Cascade, onUpdate: Cascade)
+  futured_artist_id          String
+  futured_artist             user      @relation(fields: [futured_artist_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  created_at                 DateTime  @default(now())
+  updated_at                 DateTime?
+}
+
+model album {
+  album_id   String            @id @default(cuid())
+  name       String
+  music      music[]
+  artist     album_on_artist[]
+  created_at DateTime          @default(now())
+  updated_at DateTime?
+}
+
+model album_on_artist {
+  album_on_artist_id String    @id @default(cuid())
+  album_id           String
+  album              album     @relation(fields: [album_id], references: [album_id], onDelete: Cascade, onUpdate: Cascade)
+  artist_id          String
+  artist             user      @relation(fields: [artist_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime?
 }

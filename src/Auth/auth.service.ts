@@ -4,7 +4,7 @@ import { LoginDto, SignUpDto } from './dto/auth.dto';
 import { account_type, Prisma, user } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
-import { InvalidPasswordError, StoreAccessTokenError } from 'src/utils/errors';
+import { InvalidPasswordError, InvalidTokenError, StoreAccessTokenError } from 'src/utils/errors';
 
 @Injectable()
 export class AuthService {
@@ -110,7 +110,7 @@ export class AuthService {
   }
 
   private generateAccessToken(payload: {
-    id: number;
+    id: string;
     updated_at: string | null;
   }): string {
     return sign(payload, this.SECRET_KEY, {
@@ -135,7 +135,7 @@ export class AuthService {
         if (access_token.access_token == token) {
           return user;
         }
-        throw new Error('Invalid Token');
+        throw new InvalidTokenError('Invalid Token');
       }
       throw new Error(decodedPayload);
     } catch (error) {
@@ -143,7 +143,7 @@ export class AuthService {
     }
   }
 
-  private async storeAccessToken(token: string, userID: number) {
+  private async storeAccessToken(token: string, userID: string) {
     let accessTokenObject = await this.prismaService.access_token.findUnique({
       where: {
         user_id: userID,
